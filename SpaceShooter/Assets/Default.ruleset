@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="New Rule Set" Description=" " ToolsVersion="17.0">
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="CS1591" Action="None" /> <!-- Missing XML comment for publicly visible type or member. -->
+    <Rule Id="SA1000" Action="None" /> <!-- The new and stackalloc keywords should always be followed by a space. -->
+    <Rule Id="SA1101" Action="None" /> <!-- Prefix ALL Local Calls With this. -->
+    <Rule Id="SA1127" Action="None" /> <!-- Generic Type Constraints Must start on a new line like where T : . -->
+    <Rule Id="SA1128" Action="None" /> <!-- Constructor Initializer Must start on a new line like : base. -->
+    <Rule Id="SA1134" Action="None" /> <!-- Attributes should not share line. -->
+    <Rule Id="SA1309" Action="None" /> <!-- A field name in C# begins with an underscore even for private fields. -->
+    <Rule Id="SA1412" Action="None" /> <!-- The encoding of the file is not UTF-8 with byte order mark. -->
+    <Rule Id="SA1501" Action="None" /> <!-- Statements with return or continue Must Not Be On one line with brackets. -->
+    <Rule Id="SA1503" Action="None" /> <!-- Curly braces should not be omitted ever. -->
+    <Rule Id="SA1516" Action="None" /> <!-- Adjacent C# elements like events and properties are not separated by a blank line. -->
+    <Rule Id="SA1600" Action="None" /> <!-- Elements like all class members should be documented. -->
+    <Rule Id="SA1602" Action="None" /> <!-- Enums Must Be Documented. -->
+    <Rule Id="SA1633" Action="None" /> <!-- File should have header. -->
+  </Rules>
+</RuleSet>

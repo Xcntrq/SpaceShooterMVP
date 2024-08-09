@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceShooterModel", "SpaceShooterModel.csproj", "{CD196AA2-D233-4E44-8EAC-EF19C9D35014}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceShooterGame", "SpaceShooterGame\SpaceShooterGame.csproj", "{F1038CA5-C3EC-4678-8C74-EC9A3D2068C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "ConsoleTest\ConsoleTest.csproj", "{AB5EA47C-ED63-4B35-A568-2EE255C25DA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CD196AA2-D233-4E44-8EAC-EF19C9D35014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD196AA2-D233-4E44-8EAC-EF19C9D35014}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD196AA2-D233-4E44-8EAC-EF19C9D35014}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD196AA2-D233-4E44-8EAC-EF19C9D35014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1038CA5-C3EC-4678-8C74-EC9A3D2068C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1038CA5-C3EC-4678-8C74-EC9A3D2068C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1038CA5-C3EC-4678-8C74-EC9A3D2068C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1038CA5-C3EC-4678-8C74-EC9A3D2068C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5EA47C-ED63-4B35-A568-2EE255C25DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5EA47C-ED63-4B35-A568-2EE255C25DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5EA47C-ED63-4B35-A568-2EE255C25DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5EA47C-ED63-4B35-A568-2EE255C25DA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {53F2C734-9146-45FF-8680-B62898C06C80}
+		SolutionGuid = {58346836-954C-4603-B3E9-0C5AA30548C9}
 	EndGlobalSection
 EndGlobal

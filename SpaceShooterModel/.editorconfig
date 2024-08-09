@@ -1,10 +1,42 @@
-﻿[*.cs]
+﻿[*]
+charset = utf-8
 
-# SA1633: File should have header
-dotnet_diagnostic.SA1633.severity = none
+[*.cs]
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none
+
+
+
+# SA1000: The new and stackalloc keywords should always be followed by a space
+dotnet_diagnostic.SA1000.severity = none
+
+# SA1101: Prefix ALL Local Calls With this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1134: Attributes should not share line
+dotnet_diagnostic.SA1134.severity = none
+
+# SA1309: A field name in C# begins with an underscore even for private fields
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1412: The encoding of the file is not UTF-8 with byte order mark
+dotnet_diagnostic.SA1412.severity = none
+
+# SA1501: Statements with return or continue Must Not Be On one line with brackets
+dotnet_diagnostic.SA1501.severity = none
+
+# SA1503: Braces should not be omitted
+dotnet_diagnostic.SA1503.severity = none
+
+# SA1516: Adjacent C# elements like events and properties are not separated by a blank line
+dotnet_diagnostic.SA1516.severity = none
 
 # SA1600: Elements should be documented
 dotnet_diagnostic.SA1600.severity = none
 
-# CS1591: Missing XML comment for publicly visible type or member
-dotnet_diagnostic.CS1591.severity = none
+# SA1602: Enums Must Be Documented
+dotnet_diagnostic.SA1602.severity = none
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = none
