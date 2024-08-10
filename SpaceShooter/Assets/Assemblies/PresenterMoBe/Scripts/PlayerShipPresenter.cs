@@ -1,6 +1,6 @@
 namespace PresenterMoBe
 {
-    using SpaceShooterGame;
+    using SpaceShooterGame.Contracts.Public;
     using UnityEngine;
 
     [RequireComponent(typeof(SpriteRenderer))]
@@ -15,7 +15,7 @@ namespace PresenterMoBe
             _playerShip?.SetDestination(x, y);
         }
 
-        internal override void Initialize(GamePresenter gamePresenter, IPresentableEntity presentableEntity)
+        internal override void Initialize(GamePresenter gamePresenter, IPresentable presentableEntity)
         {
             _gamePresenter = gamePresenter;
             _playerShip = presentableEntity as IPlayerShip;

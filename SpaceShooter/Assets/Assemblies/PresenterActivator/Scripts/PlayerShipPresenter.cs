@@ -1,6 +1,6 @@
 namespace PresenterActivator
 {
-    using SpaceShooterGame;
+    using SpaceShooterGame.Contracts.Public;
     using UnityEngine;
 
     internal class PlayerShipPresenter : EntityPresenter, IPlayerShip
@@ -8,7 +8,7 @@ namespace PresenterActivator
         private readonly SpriteRenderer _spriteRenderer;
         private readonly ResourceRequest _spriteRequest;
 
-        public PlayerShipPresenter(GamePresenter gamePresenter, IPresentableEntity presentableEntity, ViewableEntity viewableEntity) : base(gamePresenter, presentableEntity, viewableEntity)
+        public PlayerShipPresenter(GamePresenter gamePresenter, IPresentable presentableEntity, ViewableEntity viewableEntity) : base(gamePresenter, presentableEntity, viewableEntity)
         {
             _spriteRenderer = ViewableEntity.AddComponent<SpriteRenderer>();
             _spriteRequest = Resources.LoadAsync<Sprite>("player-ship-1");

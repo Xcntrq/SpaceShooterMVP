@@ -1,4 +1,4 @@
-namespace SpaceShooterGame
+namespace SpaceShooterGame.Contracts.Public
 {
     public interface IPlayerShip
     {

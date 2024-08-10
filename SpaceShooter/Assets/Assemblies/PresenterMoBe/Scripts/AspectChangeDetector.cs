@@ -3,7 +3,7 @@ namespace PresenterMoBe
     using System;
     using UnityEngine;
 
-    internal class AspectRatioDetector : MonoBehaviour, IAspectRatioDetector
+    internal class AspectChangeDetector : MonoBehaviour, IAspectChangeDetector
     {
         public event Action AspectRatioChanged;
 

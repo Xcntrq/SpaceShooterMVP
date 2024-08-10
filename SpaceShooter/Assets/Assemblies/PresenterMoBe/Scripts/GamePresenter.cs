@@ -1,36 +1,33 @@
 namespace PresenterMoBe
 {
-    using SpaceShooterGame;
+    using SpaceShooterGame.Contracts.Public;
+    using SpaceShooterGame.Implementations.Main;
     using UnityEngine;
 
     internal class GamePresenter : MonoBehaviour
     {
         private Game _game;
         private Camera _camera;
-        private IAspectRatioDetector _aspectRatioDetector;
+        private IAspectChangeDetector _aspectChangeDetector;
 
         private Camera Camera => (_camera != null) ? _camera : _camera = GetComponent<Camera>();
-        private IAspectRatioDetector AspectRatioDetector => _aspectRatioDetector ??= GetComponentInChildren<IAspectRatioDetector>(true);
+        private IAspectChangeDetector AspectChangeDetector => _aspectChangeDetector ??= GetComponentInChildren<IAspectChangeDetector>(true);
 
         public Vector2 ScreenToViewportPoint(Vector2 point) => Camera.ScreenToViewportPoint(point);
         public Vector2 ViewportToWorldPoint(Vector2 point) => Camera.ViewportToWorldPoint(point);
 
         private void Awake()
         {
-            PlayerShipSettings playerShipSettings = new(0.5f, 0.1f, 0.5f, 0.1f);
-            _game = new(Camera.aspect, playerShipSettings);
+            _game = new();
             _game.PresentableEntityCreated += Game_PresentableEntityCreated;
-            AspectRatioDetector.AspectRatioChanged += AspectRatioDetector_AspectRatioChanged;
+            AspectChangeDetector.AspectRatioChanged += AspectChangeDetector_AspectRatioChanged;
+            _game.SetAspectRatio(Camera.aspect);
+            _game.Start();
         }
 
-        private void AspectRatioDetector_AspectRatioChanged()
+        private void AspectChangeDetector_AspectRatioChanged()
         {
             _game.SetAspectRatio(Camera.aspect);
-        }
-
-        private void Start()
-        {
-            _game.Start();
         }
 
         private void LateUpdate()
@@ -41,13 +38,13 @@ namespace PresenterMoBe
         private void OnDestroy()
         {
             _game.PresentableEntityCreated -= Game_PresentableEntityCreated;
-            AspectRatioDetector.AspectRatioChanged -= AspectRatioDetector_AspectRatioChanged;
+            AspectChangeDetector.AspectRatioChanged -= AspectChangeDetector_AspectRatioChanged;
         }
 
-        private void Game_PresentableEntityCreated(IPresentableEntity presentableEntity)
+        private void Game_PresentableEntityCreated(IPresentable presentableEntity)
         {
             GameObject go = new() { name = presentableEntity.Name };
-            var modelTypes = typeof(IPresentableEntity).Assembly.GetTypes();
+            var modelTypes = typeof(IPresentable).Assembly.GetTypes();
             var presenterTypes = typeof(GamePresenter).Assembly.GetTypes();
 
             foreach (var modelType in modelTypes)

@@ -1,4 +1,4 @@
-namespace SpaceShooterGame
+namespace SpaceShooterGame.Contracts.Internal
 {
     internal abstract class Entity
     {

@@ -2,7 +2,8 @@ namespace PresenterActivator
 {
     using System;
     using System.Collections.Generic;
-    using SpaceShooterGame;
+    using SpaceShooterGame.Contracts.Public;
+    using SpaceShooterGame.Implementations.Main;
     using UnityEngine;
 
     internal class GamePresenter : MonoBehaviour
@@ -33,11 +34,11 @@ namespace PresenterActivator
             _game.PresentableEntityCreated -= Game_PresentableEntityCreated;
         }
 
-        private void Game_PresentableEntityCreated(IPresentableEntity presentableEntity)
+        private void Game_PresentableEntityCreated(IPresentable presentableEntity)
         {
             GameObject go = new() { name = presentableEntity.Name };
             ViewableEntity viewableEntity = go.AddComponent<ViewableEntity>();
-            var modelTypes = typeof(IPresentableEntity).Assembly.GetTypes();
+            var modelTypes = typeof(IPresentable).Assembly.GetTypes();
             var presenterTypes = typeof(GamePresenter).Assembly.GetTypes();
 
             foreach (var modelType in modelTypes)

@@ -38,6 +38,9 @@ dotnet_diagnostic.SA1516.severity = none
 # SA1600: Elements should be documented
 dotnet_diagnostic.SA1600.severity = none
 
+# SA1601: Partial Elements Must Be Documented
+dotnet_diagnostic.SA1601.severity = none
+
 # SA1602: Enums Must Be Documented
 dotnet_diagnostic.SA1602.severity = none
 

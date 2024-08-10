@@ -2,7 +2,7 @@ namespace PresenterMoBe
 {
     using System;
 
-    internal interface IAspectRatioDetector
+    internal interface IAspectChangeDetector
     {
         public event Action AspectRatioChanged;
     }

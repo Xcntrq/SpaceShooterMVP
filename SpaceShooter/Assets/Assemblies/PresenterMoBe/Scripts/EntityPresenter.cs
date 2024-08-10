@@ -1,10 +1,10 @@
 namespace PresenterMoBe
 {
-    using SpaceShooterGame;
+    using SpaceShooterGame.Contracts.Public;
     using UnityEngine;
 
     internal abstract class EntityPresenter : MonoBehaviour
     {
-        internal abstract void Initialize(GamePresenter gamePresenter, IPresentableEntity presentableEntity);
+        internal abstract void Initialize(GamePresenter gamePresenter, IPresentable presentableEntity);
     }
 }
