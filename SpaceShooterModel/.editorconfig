@@ -20,6 +20,9 @@ dotnet_diagnostic.SA1134.severity = none
 # SA1309: A field name in C# begins with an underscore even for private fields
 dotnet_diagnostic.SA1309.severity = none
 
+# SA1407: complex arithmetic expressions must have parenthesis around operators
+dotnet_diagnostic.SA1407.severity = none
+
 # SA1412: The encoding of the file is not UTF-8 with byte order mark
 dotnet_diagnostic.SA1412.severity = none
 

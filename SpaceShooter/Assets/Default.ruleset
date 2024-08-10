@@ -8,6 +8,7 @@
     <Rule Id="SA1128" Action="None" /> <!-- Constructor Initializer Must start on a new line like : base. -->
     <Rule Id="SA1134" Action="None" /> <!-- Attributes should not share line. -->
     <Rule Id="SA1309" Action="None" /> <!-- A field name in C# begins with an underscore even for private fields. -->
+    <Rule Id="SA1313" Action="None" /> <!-- Even discards Must Begin With Lower Case Letters. -->
     <Rule Id="SA1412" Action="None" /> <!-- The encoding of the file is not UTF-8 with byte order mark. -->
     <Rule Id="SA1501" Action="None" /> <!-- Statements with return or continue Must Not Be On one line with brackets. -->
     <Rule Id="SA1503" Action="None" /> <!-- Curly braces should not be omitted ever. -->

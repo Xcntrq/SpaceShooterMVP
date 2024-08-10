@@ -6,14 +6,26 @@ namespace PresenterMoBe
     internal class GamePresenter : MonoBehaviour
     {
         private Game _game;
+        private Camera _camera;
+        private IAspectRatioDetector _aspectRatioDetector;
 
-        public Vector2 ScreenToViewportPoint(Vector2 point) => GetComponent<Camera>().ScreenToViewportPoint(point);
-        public Vector2 ViewportToWorldPoint(Vector2 point) => GetComponent<Camera>().ViewportToWorldPoint(point);
+        private Camera Camera => (_camera != null) ? _camera : _camera = GetComponent<Camera>();
+        private IAspectRatioDetector AspectRatioDetector => _aspectRatioDetector ??= GetComponentInChildren<IAspectRatioDetector>(true);
+
+        public Vector2 ScreenToViewportPoint(Vector2 point) => Camera.ScreenToViewportPoint(point);
+        public Vector2 ViewportToWorldPoint(Vector2 point) => Camera.ViewportToWorldPoint(point);
 
         private void Awake()
         {
-            _game = new();
+            PlayerShipSettings playerShipSettings = new(0.5f, 0.1f, 0.5f, 0.1f);
+            _game = new(Camera.aspect, playerShipSettings);
             _game.PresentableEntityCreated += Game_PresentableEntityCreated;
+            AspectRatioDetector.AspectRatioChanged += AspectRatioDetector_AspectRatioChanged;
+        }
+
+        private void AspectRatioDetector_AspectRatioChanged()
+        {
+            _game.SetAspectRatio(Camera.aspect);
         }
 
         private void Start()
@@ -29,6 +41,7 @@ namespace PresenterMoBe
         private void OnDestroy()
         {
             _game.PresentableEntityCreated -= Game_PresentableEntityCreated;
+            AspectRatioDetector.AspectRatioChanged -= AspectRatioDetector_AspectRatioChanged;
         }
 
         private void Game_PresentableEntityCreated(IPresentableEntity presentableEntity)
