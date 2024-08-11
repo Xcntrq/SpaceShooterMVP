@@ -4,8 +4,9 @@ namespace SpaceShooterGame.Implementations.PlayerShip
 
     internal struct PlayerShipSettings
     {
-        internal PlayerShipSettings(IAspectRatioProvider aspectRatioProvider, PlayerShipCreatorSettings playerShipCreatorSettings)
+        internal PlayerShipSettings(IAspectRatioProvider aspectRatioProvider, IScreenHeightProvider screenHeightProvider, PlayerShipCreatorSettings playerShipCreatorSettings)
         {
+            ScreenHeightProvider = screenHeightProvider;
             AspectRatioProvider = aspectRatioProvider;
             X = playerShipCreatorSettings.X;
             Y = playerShipCreatorSettings.Y;
@@ -18,5 +19,6 @@ namespace SpaceShooterGame.Implementations.PlayerShip
         internal float Size { get; private set; }
         internal float Speed { get; private set; }
         internal IAspectRatioProvider AspectRatioProvider { get; private set; }
+        internal IScreenHeightProvider ScreenHeightProvider { get; private set; }
     }
 }

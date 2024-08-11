@@ -8,6 +8,7 @@ namespace SpaceShooterGame.Implementations.PlayerShip
 
     internal class PlayerShip : Entity, IPresentable, IPlayerShip, IVariablePosition, IConstantSize
     {
+        private readonly IScreenHeightProvider _screenHeightProvider;
         private readonly IAspectRatioProvider _aspectRatioProvider;
         private readonly float _speed;
         private readonly float _size;
@@ -17,12 +18,14 @@ namespace SpaceShooterGame.Implementations.PlayerShip
 
         internal PlayerShip(PlayerShipSettings settings)
         {
+            _screenHeightProvider = settings.ScreenHeightProvider;
             _aspectRatioProvider = settings.AspectRatioProvider;
             _speed = settings.Speed;
             _size = settings.Size;
             _currentPos = Game.ViewportToGame(settings.X, settings.Y, _aspectRatioProvider);
             _targetPos = _currentPos = ClampWithAspectRatio(_currentPos);
-            _aspectRatioProvider.AspectRatioChanged += AspectRatio_ValueChanged;
+            _aspectRatioProvider.AspectRatioChanged += AspectRatioProvider_AspectRatioChanged;
+            _screenHeightProvider.ScreenHeightChanged += ScreenHeightProvider_ScreenHeightChanged;
         }
 
         public event Action? PositionChanged;
@@ -51,7 +54,14 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             PositionChanged?.Invoke();
         }
 
-        private void AspectRatio_ValueChanged()
+        private void ScreenHeightProvider_ScreenHeightChanged(float value)
+        {
+            _currentPos *= value;
+            _targetPos *= value;
+            PositionChanged?.Invoke();
+        }
+
+        private void AspectRatioProvider_AspectRatioChanged()
         {
             _currentPos = ClampWithAspectRatio(_currentPos);
             _targetPos = ClampWithAspectRatio(_targetPos);

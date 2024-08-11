@@ -12,16 +12,23 @@ namespace SpaceShooterGame.Implementations.Main
         private readonly PlayerShipCreatorSettings _playerShipCreatorSettings;
         private readonly AsteroidCreatorSettings _asteroidCreatorSettings;
         private readonly List<Entity> _entities = new List<Entity>();
+        private readonly ScreenHeightProvider _screenHeightProvider;
         private readonly AspectRatioProvider _aspectRatioProvider;
 
         public Game(PlayerShipCreatorSettings? playerShipCreatorSettings = null, AsteroidCreatorSettings? asteroidCreatorSettings = null)
         {
             _playerShipCreatorSettings = playerShipCreatorSettings ?? new PlayerShipCreatorSettings(1);
             _asteroidCreatorSettings = asteroidCreatorSettings ?? new AsteroidCreatorSettings(-1);
+            _screenHeightProvider = new ScreenHeightProvider();
             _aspectRatioProvider = new AspectRatioProvider(1.8f);
         }
 
         public event Action<IPresentable>? PresentableEntityCreated;
+
+        public void SetScreenHeight(int screenHeight)
+        {
+            _screenHeightProvider.SetValue(screenHeight);
+        }
 
         public void SetAspectRatio(float aspectRatio)
         {
@@ -33,7 +40,7 @@ namespace SpaceShooterGame.Implementations.Main
         /// </summary>
         public void Start()
         {
-            AddCreator(new PlayerShipCreator(_aspectRatioProvider, _playerShipCreatorSettings));
+            AddCreator(new PlayerShipCreator(_aspectRatioProvider, _screenHeightProvider, _playerShipCreatorSettings));
             AddCreator(new AsteroidCreator(_aspectRatioProvider, _asteroidCreatorSettings));
             AdvanceTime(0);
         }

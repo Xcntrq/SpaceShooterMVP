@@ -15,8 +15,7 @@ namespace SpaceShooterGame.Implementations.Main
         internal static Vector2 ViewportToGame(float x, float y, IAspectRatioProvider aspectRatioProvider)
         {
             x = (x - 0.5f) * aspectRatioProvider.AspectRatio;
-            y = y - 0.5f;
-            return new Vector2(x, y);
+            return new Vector2(x, y - 0.5f);
         }
     }
 }
