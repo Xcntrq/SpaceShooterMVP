@@ -6,7 +6,7 @@ namespace SpaceShooterGame.Implementations.Asteroid
 
     internal class AsteroidCreator : EntityCreator
     {
-        private readonly IAspectRatioProvider _aspectRatioProvider;
+        private readonly IViewportConnection _viewportConnection;
         private readonly AsteroidCreatorSettings _settings;
         private readonly Random _random = new Random(0);
         private readonly float _firstAspectRatio;
@@ -17,15 +17,15 @@ namespace SpaceShooterGame.Implementations.Asteroid
         private float _timer;
         private int _count;
 
-        internal AsteroidCreator(IAspectRatioProvider aspectRatioProvider, AsteroidCreatorSettings settings)
+        internal AsteroidCreator(IViewportConnection viewportConnection, AsteroidCreatorSettings settings)
         {
-            _settings = settings;
-            _aspectRatioProvider = aspectRatioProvider;
-            _firstAspectRatio = _maxAspectRatio = aspectRatioProvider.AspectRatio;
+            _firstAspectRatio = _maxAspectRatio = viewportConnection.AspectRatio;
             _firstCooldown = _cooldown = settings.Cooldown;
+            _viewportConnection = viewportConnection;
             _count = settings.Count;
+            _settings = settings;
             _timer = 0f;
-            _aspectRatioProvider.AspectRatioChanged += AspectRatio_ValueChanged;
+            _viewportConnection.AspectRatioChanged += ViewportConnection_AspectRatioChanged;
         }
 
         internal override void AdvanceTime(float deltaTime)
@@ -47,17 +47,17 @@ namespace SpaceShooterGame.Implementations.Asteroid
                 float y = 0.5f + halfSize;
                 Vector2 pos = new Vector2(x, y);
 
-                AsteroidSettings asteroidSettings = new AsteroidSettings(_aspectRatioProvider, _settings, pos, size);
+                AsteroidSettings asteroidSettings = new AsteroidSettings(_viewportConnection, pos, _settings.Speed, size);
                 Entity newEntity = new Asteroid(asteroidSettings);
                 OnEntityCreated(newEntity);
             }
         }
 
-        private void AspectRatio_ValueChanged()
+        private void ViewportConnection_AspectRatioChanged(float aspectRatio)
         {
-            if (_aspectRatioProvider.AspectRatio > _maxAspectRatio)
+            if (aspectRatio > _maxAspectRatio)
             {
-                _maxAspectRatio = _aspectRatioProvider.AspectRatio;
+                _maxAspectRatio = aspectRatio;
                 _cooldown = _firstCooldown * _firstAspectRatio / _maxAspectRatio;
                 _timer = MathF.Min(_timer, _cooldown);
             }

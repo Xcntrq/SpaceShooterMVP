@@ -4,12 +4,10 @@ namespace SpaceShooterGame.Implementations.PlayerShip
     using System.Numerics;
     using SpaceShooterGame.Contracts.Internal;
     using SpaceShooterGame.Contracts.Public;
-    using SpaceShooterGame.Implementations.Main;
 
     internal class PlayerShip : Entity, IPresentable, IPlayerShip, IVariablePosition, IConstantSize
     {
-        private readonly IScreenHeightProvider _screenHeightProvider;
-        private readonly IAspectRatioProvider _aspectRatioProvider;
+        private readonly IViewportConnection _viewportConnection;
         private readonly float _speed;
         private readonly float _size;
 
@@ -18,26 +16,25 @@ namespace SpaceShooterGame.Implementations.PlayerShip
 
         internal PlayerShip(PlayerShipSettings settings)
         {
-            _screenHeightProvider = settings.ScreenHeightProvider;
-            _aspectRatioProvider = settings.AspectRatioProvider;
-            _speed = settings.Speed;
             _size = settings.Size;
-            _currentPos = Game.ViewportToGame(settings.X, settings.Y, _aspectRatioProvider);
-            _targetPos = _currentPos = ClampWithAspectRatio(_currentPos);
-            _aspectRatioProvider.AspectRatioChanged += AspectRatioProvider_AspectRatioChanged;
-            _screenHeightProvider.ScreenHeightChanged += ScreenHeightProvider_ScreenHeightChanged;
+            _speed = settings.Speed;
+            _viewportConnection = settings.ViewportConnection;
+            _currentPos = _viewportConnection.ViewportToGame(settings.X, settings.Y);
+            _targetPos = _currentPos = ClampWithAspectRatio(_currentPos, _viewportConnection.AspectRatio);
+            _viewportConnection.ScreenHeightChanged += ViewportConnection_ScreenHeightChanged;
+            _viewportConnection.AspectRatioChanged += ViewportConnection_AspectRatioChanged;
         }
 
         public event Action? PositionChanged;
 
-        public string Name => GetType().ToString();
-        public (float, float) Position => Game.GameToViewport(_currentPos, _aspectRatioProvider);
+        public string Name => GetType().Name;
+        public (float, float) Position => _viewportConnection.GameToViewport(_currentPos);
         public float Size => _size;
 
         public void SetDestination(float x, float y)
         {
-            _targetPos = Game.ViewportToGame(x, y, _aspectRatioProvider);
-            _targetPos = ClampWithAspectRatio(_targetPos);
+            _targetPos = _viewportConnection.ViewportToGame(x, y);
+            _targetPos = ClampWithAspectRatio(_targetPos, _viewportConnection.AspectRatio);
         }
 
         internal override void AdvanceTime(float deltaTime)
@@ -54,24 +51,24 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             PositionChanged?.Invoke();
         }
 
-        private void ScreenHeightProvider_ScreenHeightChanged(float value)
+        private void ViewportConnection_ScreenHeightChanged(float value)
         {
-            _currentPos *= value;
             _targetPos *= value;
+            _currentPos *= value;
             PositionChanged?.Invoke();
         }
 
-        private void AspectRatioProvider_AspectRatioChanged()
+        private void ViewportConnection_AspectRatioChanged(float aspectRatio)
         {
-            _currentPos = ClampWithAspectRatio(_currentPos);
-            _targetPos = ClampWithAspectRatio(_targetPos);
+            _currentPos = ClampWithAspectRatio(_currentPos, aspectRatio);
+            _targetPos = ClampWithAspectRatio(_targetPos, aspectRatio);
             PositionChanged?.Invoke();
         }
 
-        private Vector2 ClampWithAspectRatio(Vector2 v)
+        private Vector2 ClampWithAspectRatio(Vector2 v, float aspectRatio)
         {
             float halfSize = _size * 0.5f;
-            float halfAspect = _aspectRatioProvider.AspectRatio * 0.5f;
+            float halfAspect = aspectRatio * 0.5f;
             float x = Math.Clamp(v.X, halfSize - halfAspect, halfAspect - halfSize);
             float y = Math.Clamp(v.Y, halfSize - 0.5f, 0.5f - halfSize);
             return new Vector2(x, y);

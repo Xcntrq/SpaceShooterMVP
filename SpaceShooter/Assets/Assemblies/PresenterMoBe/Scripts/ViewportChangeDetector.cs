@@ -3,15 +3,15 @@ namespace PresenterMoBe
     using System;
     using UnityEngine;
 
-    internal class ViewportChangeDetector : MonoBehaviour, IAspectRatioChangeDetector, IScreenHeightChangeDetector
+    internal class ViewportChangeDetector : MonoBehaviour, IViewportChangeDetector
     {
-        public event Action AspectRatioChanged;
-        public event Action ScreenHeightChanged;
+        public Action OnScreenHeightChanged { private get; set; }
+        public Action OnAspectRatioChanged { private get; set; }
 
         private void OnRectTransformDimensionsChange()
         {
-            ScreenHeightChanged?.Invoke();
-            AspectRatioChanged?.Invoke();
+            OnScreenHeightChanged?.Invoke();
+            OnAspectRatioChanged?.Invoke();
         }
     }
 }

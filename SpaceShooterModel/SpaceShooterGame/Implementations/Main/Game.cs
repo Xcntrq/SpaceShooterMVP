@@ -12,27 +12,25 @@ namespace SpaceShooterGame.Implementations.Main
         private readonly PlayerShipCreatorSettings _playerShipCreatorSettings;
         private readonly AsteroidCreatorSettings _asteroidCreatorSettings;
         private readonly List<Entity> _entities = new List<Entity>();
-        private readonly ScreenHeightProvider _screenHeightProvider;
-        private readonly AspectRatioProvider _aspectRatioProvider;
+        private readonly ViewportConnection _viewportConnection;
 
         public Game(PlayerShipCreatorSettings? playerShipCreatorSettings = null, AsteroidCreatorSettings? asteroidCreatorSettings = null)
         {
             _playerShipCreatorSettings = playerShipCreatorSettings ?? new PlayerShipCreatorSettings(1);
             _asteroidCreatorSettings = asteroidCreatorSettings ?? new AsteroidCreatorSettings(-1);
-            _screenHeightProvider = new ScreenHeightProvider();
-            _aspectRatioProvider = new AspectRatioProvider(1.8f);
+            _viewportConnection = new ViewportConnection(1.8f);
         }
 
         public event Action<IPresentable>? PresentableEntityCreated;
 
         public void SetScreenHeight(int screenHeight)
         {
-            _screenHeightProvider.SetValue(screenHeight);
+            _viewportConnection.SetScreenHeight(screenHeight);
         }
 
         public void SetAspectRatio(float aspectRatio)
         {
-            _aspectRatioProvider.SetValue(aspectRatio);
+            _viewportConnection.SetAspectRatio(aspectRatio);
         }
 
         /// <summary>
@@ -40,14 +38,14 @@ namespace SpaceShooterGame.Implementations.Main
         /// </summary>
         public void Start()
         {
-            AddCreator(new PlayerShipCreator(_aspectRatioProvider, _screenHeightProvider, _playerShipCreatorSettings));
-            AddCreator(new AsteroidCreator(_aspectRatioProvider, _asteroidCreatorSettings));
-            AdvanceTime(0);
+            AddCreator(new PlayerShipCreator(_viewportConnection, _playerShipCreatorSettings));
+            AddCreator(new AsteroidCreator(_viewportConnection, _asteroidCreatorSettings));
         }
 
         public void AdvanceTime(float deltaTime)
         {
-            foreach (Entity entity in new List<Entity>(_entities))
+            IEnumerable<Entity> entities = new List<Entity>(_entities);
+            foreach (Entity entity in entities)
             {
                 entity.AdvanceTime(deltaTime);
             }
@@ -57,6 +55,7 @@ namespace SpaceShooterGame.Implementations.Main
         {
             _entities.Add(entityCreator);
             entityCreator.EntityCreated += RegisterEntity;
+            entityCreator.AdvanceTime(0);
         }
 
         private void RegisterEntity(Entity entity)

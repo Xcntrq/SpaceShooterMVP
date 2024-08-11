@@ -31,7 +31,16 @@ namespace PresenterMoBe
 
         private void Update()
         {
-            if (Input.GetMouseButton(0))
+            foreach (Touch touch in Input.touches)
+            {
+                if (_gamePresenter.IsPixelInViewport(touch.position))
+                {
+                    Vector2 mouseViewportPos = _gamePresenter.ScreenToViewportPoint(touch.position);
+                    SetDestination(mouseViewportPos.x, mouseViewportPos.y);
+                }
+            }
+
+            if ((Input.touchCount == 0) && Input.GetMouseButton(0))
             {
                 Vector2 mouseViewportPos = _gamePresenter.ScreenToViewportPoint(Input.mousePosition);
                 SetDestination(mouseViewportPos.x, mouseViewportPos.y);

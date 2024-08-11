@@ -4,16 +4,14 @@ namespace SpaceShooterGame.Implementations.PlayerShip
 
     internal class PlayerShipCreator : EntityCreator
     {
-        private readonly IScreenHeightProvider _screenHeightProvider;
-        private readonly IAspectRatioProvider _aspectRatioProvider;
+        private readonly IViewportConnection _viewportConnection;
         private readonly PlayerShipCreatorSettings _settings;
 
         private int _count;
 
-        internal PlayerShipCreator(IAspectRatioProvider aspectRatioProvider, IScreenHeightProvider screenHeightProvider, PlayerShipCreatorSettings settings)
+        internal PlayerShipCreator(IViewportConnection viewportConnection, PlayerShipCreatorSettings settings)
         {
-            _screenHeightProvider = screenHeightProvider;
-            _aspectRatioProvider = aspectRatioProvider;
+            _viewportConnection = viewportConnection;
             _count = settings.Count;
             _settings = settings;
         }
@@ -23,7 +21,7 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             while (_count > 0)
             {
                 _count--;
-                PlayerShipSettings playerShipSettings = new PlayerShipSettings(_aspectRatioProvider, _screenHeightProvider, _settings);
+                PlayerShipSettings playerShipSettings = new PlayerShipSettings(_viewportConnection, _settings);
                 Entity newEntity = new PlayerShip(playerShipSettings);
                 OnEntityCreated(newEntity);
             }

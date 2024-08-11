@@ -14,6 +14,7 @@ namespace ConsoleTest
 
         private static void Game_PresentableEntityCreated(IPresentable presentableEntity)
         {
+            Console.Write(presentableEntity.Name);
             if (presentableEntity is IPlayerShip playerShip)
             {
                 if (playerShip is IVariablePosition position)

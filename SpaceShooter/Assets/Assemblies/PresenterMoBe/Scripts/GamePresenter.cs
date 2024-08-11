@@ -8,34 +8,23 @@ namespace PresenterMoBe
     {
         private Game _game;
         private Camera _camera;
-        private IAspectRatioChangeDetector _aspectChangeDetector;
-        private IScreenHeightChangeDetector _screenHeightChangeDetector;
 
-        private Camera Camera => (_camera != null) ? _camera : _camera = GetComponent<Camera>();
-        private IAspectRatioChangeDetector AspectChangeDetector => _aspectChangeDetector ??= GetComponentInChildren<IAspectRatioChangeDetector>(true);
-        private IScreenHeightChangeDetector ScreenHeightChangeDetector => _screenHeightChangeDetector ??= GetComponentInChildren<IScreenHeightChangeDetector>(true);
+        internal Camera Camera => (_camera != null) ? _camera : _camera = GetComponent<Camera>();
 
-        public Vector2 ScreenToViewportPoint(Vector2 point) => Camera.ScreenToViewportPoint(point);
-        public Vector2 ViewportToWorldPoint(Vector2 point) => Camera.ViewportToWorldPoint(point);
+        internal Vector2 ScreenToViewportPoint(Vector2 point) => Camera.ScreenToViewportPoint(point);
+        internal Vector2 ViewportToWorldPoint(Vector2 point) => Camera.ViewportToWorldPoint(point);
+        internal bool IsPixelInViewport(Vector2 point) => new Rect(Vector2.zero, Vector2.one).Contains(Camera.ScreenToViewportPoint(point));
 
         private void Awake()
         {
             _game = new();
             _game.PresentableEntityCreated += Game_PresentableEntityCreated;
-            AspectChangeDetector.AspectRatioChanged += AspectChangeDetector_AspectRatioChanged;
-            ScreenHeightChangeDetector.ScreenHeightChanged += ScreenHeightChangeDetector_ScreenHeightChanged;
             _game.SetAspectRatio(Camera.aspect);
             _game.Start();
-        }
 
-        private void AspectChangeDetector_AspectRatioChanged()
-        {
-            _game.SetAspectRatio(Camera.aspect);
-        }
-
-        private void ScreenHeightChangeDetector_ScreenHeightChanged()
-        {
-            _game.SetScreenHeight(Screen.height);
+            IViewportChangeDetector viewportChangeDetector = GetComponentInChildren<IViewportChangeDetector>(true);
+            viewportChangeDetector.OnScreenHeightChanged = () => _game.SetScreenHeight(Screen.height);
+            viewportChangeDetector.OnAspectRatioChanged = () => _game.SetAspectRatio(Camera.aspect);
         }
 
         private void LateUpdate()
@@ -46,8 +35,6 @@ namespace PresenterMoBe
         private void OnDestroy()
         {
             _game.PresentableEntityCreated -= Game_PresentableEntityCreated;
-            AspectChangeDetector.AspectRatioChanged -= AspectChangeDetector_AspectRatioChanged;
-            ScreenHeightChangeDetector.ScreenHeightChanged -= ScreenHeightChangeDetector_ScreenHeightChanged;
         }
 
         private void Game_PresentableEntityCreated(IPresentable presentableEntity)
