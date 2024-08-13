@@ -28,9 +28,16 @@ namespace SpaceShooterGame.Implementations.Asteroid
             _viewportConnection.AspectRatioChanged += ViewportConnection_AspectRatioChanged;
         }
 
+        internal override event Action<Entity>? EntityCreated;
+        internal override event Action? Destroying;
+
         internal override void AdvanceTime(float deltaTime)
         {
-            if (_count == 0) return;
+            if (_count == 0)
+            {
+                DestroySelf();
+                return;
+            }
 
             _timer -= deltaTime;
             while (_timer <= 0)
@@ -49,7 +56,7 @@ namespace SpaceShooterGame.Implementations.Asteroid
 
                 AsteroidSettings asteroidSettings = new AsteroidSettings(_viewportConnection, pos, _settings.Speed, size);
                 Entity newEntity = new Asteroid(asteroidSettings);
-                OnEntityCreated(newEntity);
+                EntityCreated?.Invoke(newEntity);
             }
         }
 
@@ -61,6 +68,12 @@ namespace SpaceShooterGame.Implementations.Asteroid
                 _cooldown = _firstCooldown * _firstAspectRatio / _maxAspectRatio;
                 _timer = MathF.Min(_timer, _cooldown);
             }
+        }
+
+        private void DestroySelf()
+        {
+            Destroying?.Invoke();
+            _viewportConnection.AspectRatioChanged -= ViewportConnection_AspectRatioChanged;
         }
     }
 }

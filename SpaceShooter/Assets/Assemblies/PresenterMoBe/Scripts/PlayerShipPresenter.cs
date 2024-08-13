@@ -26,7 +26,10 @@ namespace PresenterMoBe
 
         private void SpriteRequest_Completed(AsyncOperation asyncOperation)
         {
-            GetComponent<SpriteRenderer>().sprite = _spriteRequest.asset as Sprite;
+            if (this != null)
+            {
+                GetComponent<SpriteRenderer>().sprite = _spriteRequest.asset as Sprite;
+            }
         }
 
         private void Update()

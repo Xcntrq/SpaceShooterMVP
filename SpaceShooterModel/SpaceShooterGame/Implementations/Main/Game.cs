@@ -22,6 +22,7 @@ namespace SpaceShooterGame.Implementations.Main
         }
 
         public event Action<IPresentable>? PresentableEntityCreated;
+        public event Action? PhysicsUpdateRequested;
 
         public void SetScreenHeight(int screenHeight)
         {
@@ -44,27 +45,42 @@ namespace SpaceShooterGame.Implementations.Main
 
         public void AdvanceTime(float deltaTime)
         {
-            IEnumerable<Entity> entities = new List<Entity>(_entities);
-            foreach (Entity entity in entities)
+            while (deltaTime > 0)
             {
-                entity.AdvanceTime(deltaTime);
+                float step = MathF.Min(deltaTime, 0.010f);
+                deltaTime -= step;
+
+                PhysicsUpdateRequested?.Invoke();
+
+                IEnumerable<Entity> entities = new List<Entity>(_entities);
+                foreach (Entity entity in entities)
+                {
+                    entity.AdvanceTime(step);
+                }
             }
         }
 
         private void AddCreator(EntityCreator entityCreator)
         {
-            _entities.Add(entityCreator);
-            entityCreator.EntityCreated += RegisterEntity;
-            entityCreator.AdvanceTime(0);
+            entityCreator.EntityCreated += AddEntity;
+            AddEntity(entityCreator);
         }
 
-        private void RegisterEntity(Entity entity)
+        private void AddEntity(Entity entity)
         {
             _entities.Add(entity);
+            entity.Destroying += () => RemoveEntity(entity);
             if (entity is IPresentable presentable)
             {
                 PresentableEntityCreated?.Invoke(presentable);
             }
+
+            entity.AdvanceTime(0);
+        }
+
+        private void RemoveEntity(Entity entity)
+        {
+            _entities.Remove(entity);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace SpaceShooterGame.Implementations.PlayerShip
     using SpaceShooterGame.Contracts.Internal;
     using SpaceShooterGame.Contracts.Public;
 
-    internal class PlayerShip : Entity, IPresentable, IPlayerShip, IVariablePosition, IConstantSize
+    internal class PlayerShip : Entity, IPresentable, IPlayerShip, IVariablePosition, IConstantSize, IPhysical, IDestroyable
     {
         private readonly IViewportConnection _viewportConnection;
         private readonly float _speed;
@@ -26,6 +26,9 @@ namespace SpaceShooterGame.Implementations.PlayerShip
         }
 
         public event Action? PositionChanged;
+        public event Action? Destroyed;
+
+        internal override event Action? Destroying;
 
         public string Name => GetType().Name;
         public (float, float) Position => _viewportConnection.GameToViewport(_currentPos);
@@ -37,9 +40,15 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             _targetPos = ClampWithAspectRatio(_targetPos, _viewportConnection.AspectRatio);
         }
 
+        public void ProcessCollision(IPhysical anotherPhysical)
+        {
+            if (anotherPhysical is IAsteroid)
+                DestroySelf();
+        }
+
         internal override void AdvanceTime(float deltaTime)
         {
-            if (deltaTime == 0 || _currentPos == _targetPos) return;
+            if ((deltaTime == 0) || (_currentPos == _targetPos)) return;
 
             Vector2 dir = Vector2.Normalize(_targetPos - _currentPos);
             Vector2 newPos = _currentPos + _speed * deltaTime * dir;
@@ -72,6 +81,14 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             float x = Math.Clamp(v.X, halfSize - halfAspect, halfAspect - halfSize);
             float y = Math.Clamp(v.Y, halfSize - 0.5f, 0.5f - halfSize);
             return new Vector2(x, y);
+        }
+
+        private void DestroySelf()
+        {
+            Destroying?.Invoke();
+            _viewportConnection.ScreenHeightChanged -= ViewportConnection_ScreenHeightChanged;
+            _viewportConnection.AspectRatioChanged -= ViewportConnection_AspectRatioChanged;
+            Destroyed?.Invoke();
         }
     }
 }

@@ -1,5 +1,6 @@
 namespace SpaceShooterGame.Implementations.PlayerShip
 {
+    using System;
     using SpaceShooterGame.Contracts.Internal;
 
     internal class PlayerShipCreator : EntityCreator
@@ -16,6 +17,9 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             _settings = settings;
         }
 
+        internal override event Action<Entity>? EntityCreated;
+        internal override event Action? Destroying;
+
         internal override void AdvanceTime(float deltaTime)
         {
             while (_count > 0)
@@ -23,8 +27,15 @@ namespace SpaceShooterGame.Implementations.PlayerShip
                 _count--;
                 PlayerShipSettings playerShipSettings = new PlayerShipSettings(_viewportConnection, _settings);
                 Entity newEntity = new PlayerShip(playerShipSettings);
-                OnEntityCreated(newEntity);
+                EntityCreated?.Invoke(newEntity);
             }
+
+            DestroySelf();
+        }
+
+        private void DestroySelf()
+        {
+            Destroying?.Invoke();
         }
     }
 }

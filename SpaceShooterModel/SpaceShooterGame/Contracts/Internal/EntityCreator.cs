@@ -4,11 +4,6 @@ namespace SpaceShooterGame.Contracts.Internal
 
     internal abstract class EntityCreator : Entity
     {
-        internal event Action<Entity>? EntityCreated;
-
-        private protected void OnEntityCreated(Entity entity)
-        {
-            EntityCreated?.Invoke(entity);
-        }
+        internal abstract event Action<Entity> EntityCreated;
     }
 }
