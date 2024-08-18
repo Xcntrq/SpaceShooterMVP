@@ -6,10 +6,15 @@ namespace PresenterMoBe
 
     internal class GamePresenter : MonoBehaviour
     {
+        [SerializeField] private Canvas _gameplayCanvas;
+        [SerializeField] private Canvas _pauseCanvas;
+        [SerializeField] private Canvas _lossCanvas;
+
         private Game _game;
         private Camera _camera;
 
         internal Camera Camera => (_camera != null) ? _camera : _camera = GetComponent<Camera>();
+        internal Canvas GameplayCanvas => _gameplayCanvas;
 
         internal Vector2 ScreenToViewportPoint(Vector2 point) => Camera.ScreenToViewportPoint(point);
         internal Vector3 ViewportToWorldPoint(Vector2 point) => Camera.ViewportToWorldPoint(point);
@@ -17,7 +22,9 @@ namespace PresenterMoBe
 
         private void Awake()
         {
+            // _game = new(null, new(-1, 2f));
             _game = new();
+            _game.Lost += Game_Lost;
             _game.PhysicsUpdateRequested += Game_PhysicsUpdateRequested;
             _game.PresentableEntityCreated += Game_PresentableEntityCreated;
             _game.SetAspectRatio(Camera.aspect);
@@ -38,6 +45,14 @@ namespace PresenterMoBe
         {
             _game.PresentableEntityCreated -= Game_PresentableEntityCreated;
             _game.PhysicsUpdateRequested -= Game_PhysicsUpdateRequested;
+            _game.Lost -= Game_Lost;
+        }
+
+        private void Game_Lost()
+        {
+            _gameplayCanvas.gameObject.SetActive(false);
+            _pauseCanvas.gameObject.SetActive(false);
+            _lossCanvas.gameObject.SetActive(true);
         }
 
         private void Game_PhysicsUpdateRequested()

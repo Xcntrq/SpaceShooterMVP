@@ -19,8 +19,8 @@ namespace SpaceShooterGame.Implementations.Asteroid
 
         internal AsteroidCreator(IViewportConnection viewportConnection, AsteroidCreatorSettings settings)
         {
+            _firstCooldown = _cooldown = settings.Cooldown / viewportConnection.AspectRatio;
             _firstAspectRatio = _maxAspectRatio = viewportConnection.AspectRatio;
-            _firstCooldown = _cooldown = settings.Cooldown;
             _viewportConnection = viewportConnection;
             _count = settings.Count;
             _settings = settings;

@@ -10,7 +10,8 @@ namespace PresenterMoBe
 
         internal override void Initialize(GamePresenter _, IPresentable __)
         {
-            _spriteRequest = Resources.LoadAsync<Sprite>("asteroid-1");
+            int number = Random.Range(1, 5);
+            _spriteRequest = Resources.LoadAsync<Sprite>($"asteroid-{number}");
             _spriteRequest.completed += SpriteRequest_Completed;
         }
 

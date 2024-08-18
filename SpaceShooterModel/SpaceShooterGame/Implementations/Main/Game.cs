@@ -11,18 +11,19 @@ namespace SpaceShooterGame.Implementations.Main
     {
         private readonly PlayerShipCreatorSettings _playerShipCreatorSettings;
         private readonly AsteroidCreatorSettings _asteroidCreatorSettings;
+        private readonly ViewportConnection _viewportConnection = new ViewportConnection(1.8f);
+        private readonly PlayerShips _playerShips = new PlayerShips();
         private readonly List<Entity> _entities = new List<Entity>();
-        private readonly ViewportConnection _viewportConnection;
 
         public Game(PlayerShipCreatorSettings? playerShipCreatorSettings = null, AsteroidCreatorSettings? asteroidCreatorSettings = null)
         {
             _playerShipCreatorSettings = playerShipCreatorSettings ?? new PlayerShipCreatorSettings(1);
             _asteroidCreatorSettings = asteroidCreatorSettings ?? new AsteroidCreatorSettings(-1);
-            _viewportConnection = new ViewportConnection(1.8f);
         }
 
         public event Action<IPresentable>? PresentableEntityCreated;
         public event Action? PhysicsUpdateRequested;
+        public event Action? Lost;
 
         public void SetScreenHeight(int screenHeight)
         {
@@ -69,7 +70,9 @@ namespace SpaceShooterGame.Implementations.Main
         private void AddEntity(Entity entity)
         {
             _entities.Add(entity);
+            _playerShips.TryAdd(entity);
             entity.Destroying += () => RemoveEntity(entity);
+
             if (entity is IPresentable presentable)
             {
                 PresentableEntityCreated?.Invoke(presentable);
@@ -81,6 +84,9 @@ namespace SpaceShooterGame.Implementations.Main
         private void RemoveEntity(Entity entity)
         {
             _entities.Remove(entity);
+
+            if ((_playerShips.Count > 0) && (_playerShips.TryRemoveAndCount(entity) == 0))
+                Lost?.Invoke();
         }
     }
 }

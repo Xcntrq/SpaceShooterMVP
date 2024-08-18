@@ -34,6 +34,11 @@ namespace SpaceShooterGame.Implementations.Asteroid
 
         public void ProcessCollision(IPhysical anotherPhysical)
         {
+            if (anotherPhysical is IAsteroid && anotherPhysical is IVariablePosition position)
+            {
+                if (position.Position.Item2 < Position.Item2)
+                    DestroySelf();
+            }
         }
 
         internal override void AdvanceTime(float deltaTime)
