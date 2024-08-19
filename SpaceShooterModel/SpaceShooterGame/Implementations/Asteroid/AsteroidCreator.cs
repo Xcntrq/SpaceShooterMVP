@@ -54,7 +54,10 @@ namespace SpaceShooterGame.Implementations.Asteroid
                 float y = 0.5f + halfSize;
                 Vector2 pos = new Vector2(x, y);
 
-                AsteroidSettings asteroidSettings = new AsteroidSettings(_viewportConnection, pos, _settings.Speed, size);
+                float rot = 360f * (float)_random.NextDouble();
+                float rotSpeed = 0.2f * 360f * ((float)_random.NextDouble() - 0.5f);
+
+                AsteroidSettings asteroidSettings = new AsteroidSettings(_viewportConnection, pos, rot, rotSpeed, _settings.Speed, size);
                 Entity newEntity = new Asteroid(asteroidSettings);
                 EntityCreated?.Invoke(newEntity);
             }

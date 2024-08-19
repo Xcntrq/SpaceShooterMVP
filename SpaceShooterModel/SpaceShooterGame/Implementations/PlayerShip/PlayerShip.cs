@@ -26,7 +26,7 @@ namespace SpaceShooterGame.Implementations.PlayerShip
         }
 
         public event Action? PositionChanged;
-        public event Action? Destroyed;
+        public event Action<bool>? Destroyed;
 
         internal override event Action? Destroying;
 
@@ -43,7 +43,7 @@ namespace SpaceShooterGame.Implementations.PlayerShip
         public void ProcessCollision(IPhysical anotherPhysical)
         {
             if (anotherPhysical is IAsteroid)
-                DestroySelf();
+                DestroySelf(true);
         }
 
         internal override void AdvanceTime(float deltaTime)
@@ -83,12 +83,12 @@ namespace SpaceShooterGame.Implementations.PlayerShip
             return new Vector2(x, y);
         }
 
-        private void DestroySelf()
+        private void DestroySelf(bool hasEffect)
         {
             Destroying?.Invoke();
             _viewportConnection.ScreenHeightChanged -= ViewportConnection_ScreenHeightChanged;
             _viewportConnection.AspectRatioChanged -= ViewportConnection_AspectRatioChanged;
-            Destroyed?.Invoke();
+            Destroyed?.Invoke(hasEffect);
         }
     }
 }

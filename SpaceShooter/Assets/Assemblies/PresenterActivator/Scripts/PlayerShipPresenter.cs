@@ -1,5 +1,6 @@
 namespace PresenterActivator
 {
+    using System;
     using SpaceShooterGame.Contracts.Public;
     using UnityEngine;
 
@@ -15,7 +16,11 @@ namespace PresenterActivator
 
             _spriteRequest.completed += SpriteRequest_Completed;
             ViewableEntity.Updating += ViewableEntity_Updating;
+            ViewableEntity.Destroying += ViewableEntity_Destroying;
         }
+
+        // Temp
+        public event Action<bool> Destroyed;
 
         public void SetDestination(float x, float y)
         {
@@ -34,6 +39,11 @@ namespace PresenterActivator
                 Vector2 mouseViewportPos = GamePresenter.ScreenToViewportPoint(Input.mousePosition);
                 SetDestination(mouseViewportPos.x, mouseViewportPos.y);
             }
+        }
+
+        private void ViewableEntity_Destroying()
+        {
+            Destroyed?.Invoke(false);
         }
     }
 }

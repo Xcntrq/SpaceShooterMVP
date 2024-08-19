@@ -1,5 +1,6 @@
 namespace PresenterMoBe
 {
+    using System;
     using System.Collections.Generic;
     using SpaceShooterGame.Contracts.Public;
     using UnityEngine;
@@ -9,11 +10,18 @@ namespace PresenterMoBe
     [RequireComponent(typeof(SpriteRenderer))]
     internal class PlayerShipPresenter : EntityPresenter, IPlayerShip
     {
+        private static readonly Color[] _colors = new Color[2] { Color.cyan, Color.red };
+
         private static int _number = 0;
 
         private IPlayerShip _playerShip;
         private GamePresenter _gamePresenter;
         private ResourceRequest _spriteRequest;
+        private ResourceRequest _effectRequest;
+        private ParticleSystem _effectSystem;
+        private int _cachedNumber;
+
+        public event Action<bool> Destroyed;
 
         public void SetDestination(float x, float y)
         {
@@ -24,13 +32,16 @@ namespace PresenterMoBe
         {
             _gamePresenter = gamePresenter;
             _playerShip = presentableEntity as IPlayerShip;
+            _playerShip.Destroyed += PlayerShip_Destroyed;
 
-            _number++;
-            _spriteRequest = Resources.LoadAsync<Sprite>($"player-ship-{_number}");
+            _cachedNumber = ++_number;
+            _spriteRequest = Resources.LoadAsync<Sprite>($"player-ship-{_cachedNumber}");
+            _effectRequest = Resources.LoadAsync<ParticleSystem>("player-boom");
             _spriteRequest.completed += SpriteRequest_Completed;
+            _effectRequest.completed += EffectRequest_Completed;
         }
 
-        private void SpriteRequest_Completed(AsyncOperation asyncOperation)
+        private void SpriteRequest_Completed(AsyncOperation _)
         {
             if (this != null)
             {
@@ -38,9 +49,37 @@ namespace PresenterMoBe
             }
         }
 
+        private void EffectRequest_Completed(AsyncOperation _)
+        {
+            if (this != null)
+            {
+                _effectSystem = _effectRequest.asset as ParticleSystem;
+            }
+        }
+
+        private void PlayerShip_Destroyed(bool hasEffect)
+        {
+            if (hasEffect && (_effectSystem != null))
+            {
+                ParticleSystem particleSystem = Instantiate(_effectSystem, gameObject.transform.position, gameObject.transform.rotation);
+                ParticleSystem[] ps = particleSystem.GetComponentsInChildren<ParticleSystem>(true);
+                foreach (ParticleSystem p in ps)
+                {
+                    ParticleSystem.MainModule main = p.main;
+                    main.startColor = _colors[_cachedNumber - 1];
+                    p.transform.localScale *= 0.01f;
+                }
+            }
+
+            Destroyed?.Invoke(false);
+        }
+
         private void OnDestroy()
         {
             _number--;
+            _playerShip.Destroyed -= PlayerShip_Destroyed;
+            _spriteRequest.completed -= SpriteRequest_Completed;
+            _effectRequest.completed -= EffectRequest_Completed;
         }
 
         private void Update()

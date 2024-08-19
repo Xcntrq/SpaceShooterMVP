@@ -9,7 +9,7 @@ namespace PresenterMoBe
     {
         private IDestroyable _destroyable;
 
-        public event Action Destroyed;
+        public event Action<bool> Destroyed;
 
         internal override void Initialize(GamePresenter _, IPresentable presentableEntity)
         {
@@ -17,7 +17,7 @@ namespace PresenterMoBe
             _destroyable.Destroyed += Destroyable_Destroyed;
         }
 
-        private void Destroyable_Destroyed()
+        private void Destroyable_Destroyed(bool hasEffect)
         {
             if (_destroyable != null)
             {
@@ -25,7 +25,7 @@ namespace PresenterMoBe
             }
 
             Destroy(gameObject);
-            Destroyed?.Invoke();
+            Destroyed?.Invoke(false);
         }
     }
 }

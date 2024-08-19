@@ -1,5 +1,6 @@
 namespace PresenterMoBe
 {
+    using System.Collections;
     using SpaceShooterGame.Contracts.Public;
     using SpaceShooterGame.Implementations.Main;
     using UnityEngine;
@@ -30,6 +31,7 @@ namespace PresenterMoBe
             _game.SetAspectRatio(Camera.aspect);
             _game.Start();
 
+            Camera.allowHDR = true;
             IViewportChangeDetector viewportChangeDetector = GetComponentInChildren<IViewportChangeDetector>(true);
             viewportChangeDetector.OnScreenHeightChanged = () => _game.SetScreenHeight(Screen.height);
             viewportChangeDetector.OnAspectRatioChanged = () => _game.SetAspectRatio(Camera.aspect);
@@ -52,6 +54,12 @@ namespace PresenterMoBe
         {
             _gameplayCanvas.gameObject.SetActive(false);
             _pauseCanvas.gameObject.SetActive(false);
+            StartCoroutine(ProcLoss());
+        }
+
+        private IEnumerator ProcLoss()
+        {
+            yield return new WaitForSeconds(2f);
             _lossCanvas.gameObject.SetActive(true);
         }
 

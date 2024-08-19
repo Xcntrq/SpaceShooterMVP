@@ -4,6 +4,6 @@ namespace SpaceShooterGame.Contracts.Public
 
     public interface IDestroyable
     {
-        public event Action Destroyed;
+        public event Action<bool> Destroyed;
     }
 }
